@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../models/habit.dart';
@@ -8,8 +9,9 @@ import 'stats_screen.dart';
 /// Today's view: list of habit cards with quick actions.
 class HomeScreen extends StatefulWidget {
   final HabitProvider provider;
+  final User user;
 
-  const HomeScreen({super.key, required this.provider});
+  const HomeScreen({super.key, required this.provider, required this.user});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -33,6 +35,15 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Habit Tracker'),
+            actions: [
+              IconButton(
+                tooltip: 'Sign out',
+                icon: const Icon(Icons.logout),
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                },
+              ),
+            ],
           ),
           body: !widget.provider.loaded
               ? const Center(child: CircularProgressIndicator())
